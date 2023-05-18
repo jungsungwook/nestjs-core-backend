@@ -23,6 +23,7 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^6.3.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "reflect-metadata": "^0.1.13",
