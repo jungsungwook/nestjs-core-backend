@@ -8,9 +8,9 @@ import { AuthLoginDto } from './dto/auth-login.dto';
 import { ApiTags, ApiOperation, ApiCreatedResponse, ApiResponse } from '@nestjs/swagger';
 import { DefaultResponseDto } from './dto/default-response.dto';
 import { ErrorResponseDto } from './dto/error-response.dto';
+import { EntityManager } from 'typeorm';
 import { TransactionInterceptor } from 'src/decorators/TransactionInterceptor.decorator';
 import { TransactionManager } from 'src/decorators/TransactionManager.decorator';
-import { EntityManager } from 'typeorm';
 
 @Controller('auth')
 @UseInterceptors(TransactionInterceptor)
