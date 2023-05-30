@@ -31,4 +31,20 @@ export class User extends BaseEntity{
     @ApiProperty({description: 'Refresh Token'})
     @Column({ nullable: true })
     refreshToken: string;
+
+    @ApiProperty({description: '생성일'})
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    createdAt: Date;
+
+    @ApiProperty({description: '수정일'})
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    updatedAt: Date;
+
+    @ApiProperty({description: '삭제일'})
+    @Column({ type: 'timestamp', nullable: true })
+    deletedAt: Date;
+
+    @ApiProperty({description: '삭제여부'})
+    @Column({ default: false })
+    isDeleted: boolean;
 }
