@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 @Unique(['customId'])
@@ -33,15 +33,15 @@ export class User extends BaseEntity{
     refreshToken: string;
 
     @ApiProperty({description: '생성일'})
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
 
     @ApiProperty({description: '수정일'})
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     updatedAt: Date;
 
     @ApiProperty({description: '삭제일'})
-    @Column({ type: 'timestamp', nullable: true })
+    @DeleteDateColumn({ type: 'timestamp', nullable: true })
     deletedAt: Date;
 
     @ApiProperty({description: '삭제여부'})
