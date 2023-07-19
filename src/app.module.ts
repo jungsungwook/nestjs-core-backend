@@ -2,6 +2,11 @@ import { CacheModule, MiddlewareConsumer, Module, RequestMethod } from '@nestjs/
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthTokenMiddleware } from './auth/authToken.middleware';
+import { GatewayModule } from './gateways/gateway.module';
+import { UsersModule } from './pages/users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { ChatModule } from './pages/chat/chat.module';
+import { RedisCacheModule } from './cache/redis.module';
 
 @Module({
   imports: [
