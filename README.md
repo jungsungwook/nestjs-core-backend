@@ -132,5 +132,71 @@ NestJS로 API 서버를 구축할 때 사용하기 위해 만들었다.
     ```
     위와 같이 원하는 곳에 넣게 될 경우 해당 조건을 만족하지 않으면 미들웨어 단계에서 응답을 처리하여 서버 부담을 줄일 수 있습니다.
 
+- Socket.io
+
+    socket.io를 이용하여 서버-클라이언트 간 소켓 통신을 지원합니다.
+    필요에 따라 소켓 통신 과정에서 jwt토큰을 통해 최초 connection에서 인증 과정을 거칩니다.
+
+    다음은 socket 통신을 위한 gateway 설명입니다.
+
+    src\gateways 경로에서 모든 소켓 통신 관련 모듈 및 코드가 관리됩니다.
+    
+    gateway.core.ts는 gateway의 모든 신호를 우선 처리하는 일종의 인터셉터로 기획하였으나, 추후 변경 될 수 있습니다.
+    
+    gateway.module.ts는 gateway.core를 포함한 모든 게이트웨이들을 provide/export 하며, 각 게이트웨이가 외부의 모듈을 사용할 수 있도록 import 하고 있습니다.
+
+    따라서 신규로 gateway를 추가하고자 할 땐, src\gateways 경로 아래에 새로 폴더를 만들고 gateway.[name].ts 파일을 생성한 뒤 코드를 작성하면 됩니다. 그 후 gateway.module.ts에서 해당 파일을 provides와 exports에 등록하면 됩니다.
+
+    다음은 gateway 생성 시 신규 코드 예시입니다.
+    ```typescript
+    import { WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+    import { Server } from "socket.io";
+    // 만약 외부 서비스/dto 등을 사용하고 싶은 경우 미리 gateway.module.ts에서 imports에 해당 모듈을 등록한 뒤 아래와 같이 import 하면 된다.
+    import { ... } from "src/pages/[importModuleName]/dto/[importModuleName].dto";
+    import { [importModuleName]Service } from "src/pages/[importModuleName]/[importModuleName].service";
+    @WebSocketGateway(8080, {
+        transports: ['websocket'],
+        cors: {
+            origin: '*',
+        },
+    })
+    export class ExampleGateway {
+        constructor() {
+            // 마찬가지로 꼭 gateway.module.ts에서 imports에 등록되어있는지 확인.
+            private readonly [importModuleName]Service : [importModuleName]Service,
+            ...
+        }
+        @WebSocketServer()
+        server: Server;
+
+        // Api 서비스 혹은 컨트롤러에서 소켓통신을 사용할 경우 아래 함수를 호출할 수 있도록 할수도 있다. 단, 해당 모듈에서 gateway.module.ts를 해당 모듈의 imports에 등록해아한다.
+        // 중요한 건 서로 상호 참조할 경우 충돌이 일어날 수 있으므로, forwardRef(()=> Module) 을 통해 방지하도록 하자.
+        async usedAtApi(
+            socketId: string,
+            ...
+        ) {
+            this.server.to(socketId).emit(info_type, {
+                userId: userId,
+                matchInfo: matchInfo,
+            });
+        }
+
+        @SubscribeMessage('test')
+        async handleChat(
+            @MessageBody() data: { ... },
+            @ConnectedSocket() client: Socket
+        ) {
+            try {
+                ...
+                this.server.emit('receive_chat');
+            } catch (err) {
+                ...
+                client.emit('error');
+            }
+        }
+    }
+    ```
+    
+    
 ## Todo.
 ***
