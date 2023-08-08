@@ -2,7 +2,7 @@
 
 ## 개요
 ***
-NestJS로 API 서버를 구축할 때 사용하기 위해 만들었다.
+NestJS로 API 서버를 구축할 때 사용하기 위해 만들었다. 다시 생각해보면 Core라기 보다는 Boilerplate Template가 맞는 것 같다..
 
 ## 기능
 ***
